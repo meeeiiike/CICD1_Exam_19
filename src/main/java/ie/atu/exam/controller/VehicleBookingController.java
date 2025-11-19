@@ -1,9 +1,13 @@
 package ie.atu.exam.controller;
 
+import ie.atu.exam.errorHandling.BookingNotFoundException;
+import ie.atu.exam.model.VehicleBooking;
 import ie.atu.exam.service.VehicleBookingService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -13,9 +17,43 @@ public class VehicleBookingController {
         this.vehicleBookingService = vehicleBookingService;
     }
 
-    /*
     @GetMapping("/{regNumber}")
-    public
+    public ResponseEntity<VehicleBooking> getVehicleBooking(@Valid @PathVariable String regNumber) {
+        Optional<VehicleBooking> foundVehicleBooking = vehicleBookingService.findByRegNumber(regNumber);
+        if (foundVehicleBooking.isEmpty()) {
+            throw new BookingNotFoundException("[WARNING] Booking Not Found!");
+        }
+        else{
+            return ResponseEntity.ok(foundVehicleBooking.get());
+        }
+    }
 
-     */
+    @PostMapping
+    public ResponseEntity<VehicleBooking> createVehicleBooking(@Valid @RequestBody VehicleBooking vehicleBooking) {
+        VehicleBooking newVehicleBooking = vehicleBookingService.create(vehicleBooking);
+        return ResponseEntity.ok(newVehicleBooking);
+    }
+
+    @PutMapping("/{regNumber}")
+    public ResponseEntity<VehicleBooking> update(@Valid @PathVariable String regNumber) {
+        Optional<VehicleBooking> foundVehicleBooking = vehicleBookingService.findByRegNumber(regNumber);
+        if(foundVehicleBooking.isEmpty()){
+            throw new BookingNotFoundException("[WARNING] Booking Not Found!");
+        }
+        else{
+            VehicleBooking updatedVehicleBooking = vehicleBookingService.update(foundVehicleBooking.get());
+            return ResponseEntity.ok(updatedVehicleBooking);
+        }
+    }
+    @DeleteMapping("/{regNumber}")
+    public ResponseEntity<VehicleBooking> delete(@Valid @PathVariable String regNumber) {
+        Optional<VehicleBooking> foundVehicleBooking = vehicleBookingService.findByRegNumber(regNumber);
+        if(foundVehicleBooking.isEmpty()){
+            throw new BookingNotFoundException("[WARNING] Booking Not Found!");
+        }
+        else{
+            VehicleBooking updatedVehicleBooking = vehicleBookingService.delete(foundVehicleBooking.get());
+            return ResponseEntity.ok(updatedVehicleBooking);
+        }
+    }
 }
