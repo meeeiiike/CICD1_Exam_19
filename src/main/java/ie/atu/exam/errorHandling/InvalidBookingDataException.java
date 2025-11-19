@@ -10,4 +10,5 @@ public class InvalidBookingDataException extends RuntimeException{
     public InvalidBookingDataException(String message) {
         super(message);
     }
+    // Assuming this is a custom exception class for the validation annotations, not sure if correct and how to implement will return if time.
 }
