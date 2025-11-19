@@ -34,14 +34,15 @@ public class VehicleBookingController {
         return ResponseEntity.ok(newVehicleBooking);
     }
 
+
     @PutMapping("/{regNumber}")
-    public ResponseEntity<VehicleBooking> update(@Valid @PathVariable String regNumber) {
+    public ResponseEntity<VehicleBooking> update(@Valid @PathVariable String regNumber, @RequestBody VehicleBooking vehicleBooking) {
         Optional<VehicleBooking> foundVehicleBooking = vehicleBookingService.findByRegNumber(regNumber);
         if(foundVehicleBooking.isEmpty()){
             throw new BookingNotFoundException("[WARNING] Booking Not Found!");
         }
         else{
-            VehicleBooking updatedVehicleBooking = vehicleBookingService.update(foundVehicleBooking.get());
+            VehicleBooking updatedVehicleBooking = vehicleBookingService.update(vehicleBooking);
             return ResponseEntity.ok(updatedVehicleBooking);
         }
     }
