@@ -1,0 +1,4 @@
+package ie.atu.exam.errorHandling;
+
+public class BookingNotFoundException {
+}
